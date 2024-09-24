@@ -1,0 +1,41 @@
+﻿@model WebApplication_Students_Teachers_.Models.TimeTable
+
+<div class="card mb-3 ms-2">
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Date:</strong> @Model.Date.ToString("yyyy-MM-dd")</div>
+        </div>
+
+        <h4 class="mt-4">Lessons</h4>
+        @if (Model.Lessons != null && Model.Lessons.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Lesson Name</th>
+                            <th>Topic</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var lesson in Model.Lessons)
+                        {
+                            <tr>
+                                <td>@lesson.Name</td>
+                                <td>@lesson.Topic</td>
+                                <td>@lesson.StartTime.ToString("HH:mm")</td>
+                                <td>@lesson.EndTime.ToString("HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No lessons available.</p>
+        }
+    </div>
+</div>

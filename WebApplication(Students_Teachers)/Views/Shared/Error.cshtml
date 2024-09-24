@@ -1,0 +1,25 @@
+﻿@model Exception
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <hgroup>
+        <h1>Exception Message: @Model.Message</h1>
+        <h2 style="background-color: cornflowerblue">Please, notify us about this failure, so that we are able to fix it and let you continue to enjoy our service!</h2>
+        <h2 style="background-color: yellow">Our contacts: nazdravetskyiartem@gmail.com</h2>
+        <h4>Exception Details: @Model.ToString()</h4>
+    </hgroup>
+
+    <button class="btn btn-danger ms-auto" id="logoutButton">
+        Logout
+    </button>
+
+    <form id="logoutForm" action="@Url.RouteUrl("Default", new {controller = "Authorization", action = "Logout"})" method="post" hidden></form>
+
+    @Scripts.Render("~/bundles/logout")
+</body>
+</html>

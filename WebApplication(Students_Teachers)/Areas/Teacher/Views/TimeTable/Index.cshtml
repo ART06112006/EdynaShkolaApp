@@ -1,0 +1,136 @@
+﻿@model List<WebApplication_Students_Teachers_.Models.TimeTable>
+
+@{
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    @section styles{
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    }
+
+    @section scripts{
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        @Scripts.Render("~/bundles/teacher.index")
+        @Scripts.Render("~/bundles/logout")
+
+        <script>
+            $(document).ready(function () {
+                if (@(ViewBag.ModalMessage.Show.ToString().ToLower())) {
+                    $('#dataModal .modal-header').prepend(@Html.Raw(Json.Encode(ViewBag.ModalMessage.Header)));
+                    $('#dataModal .modal-body').prepend(@Html.Raw(Json.Encode(ViewBag.ModalMessage.Body)));
+                    $('#dataModal .modal-footer').prepend(@Html.Raw(Json.Encode(ViewBag.ModalMessage.Footer)));
+                    $('#dataModal').modal('show');
+                }
+            });
+        </script>
+    }
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Time Table</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <button class="btn btn-primary ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddTimeTable" aria-controls="offcanvasMenu">
+                        Add Time Table
+                    </button>
+                </div>
+                <button class="btn btn-danger ms-auto" id="logoutButton">
+                    Logout
+                </button>
+
+                <form id="logoutForm" action="@Url.RouteUrl("Default", new {controller = "Authorization", action = "Logout"})" method="post" hidden></form>
+            </div>
+        </nav>
+    </header>
+
+    <main class="mt-5 py-1">
+        <div class="container my-5">
+            <div class="row" id="book-container">
+                @foreach (var timeTable in Model)
+                {
+                    @Html.Partial("_TimeTable", timeTable)
+                }
+            </div>
+        </div>
+    </main>
+
+    <!-- Offcanvas Add Time Table-->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddTimeTable" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasMenuLabel">Add Time Table</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="addTimeTableForm" action="@Url.Action("AddTimeTable", "TimeTable", new { area = "Teacher" })" method="post" style="width: 100%" class="d-flex flex-column justify-content-center mx-auto">
+                <div class="mb-3">
+                    <label for="date">Date</label>
+                    <input class="form-check-input" type="date" id="date" name="Date" required>
+                </div>
+                <button id="submitButton" type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Offcanvas Add Lesson-->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddLesson" aria-labelledby="offcanvasMenuLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasMenuLabel">Add Lesson</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form id="addTimeTableForm" action="@Url.Action("AddLesson", "TimeTable", new { area = "Teacher" })" method="post" style="width: 100%;" class="d-flex flex-column justify-content-center mx-auto">
+                <input type="hidden" id="timeTableId" name="TimeTableId" />
+
+                <div class="mb-3">
+                    <label for="lessonName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="lessonName" name="Name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lessonTopic" class="form-label">Topic</label>
+                    <input type="text" class="form-control" id="lessonTopic" name="Topic" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lessonStart" class="form-label">Start Time</label>
+                    <input type="time" class="form-control" id="lessonStart" name="StartTime" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="lessonEnd" class="form-label">End Time</label>
+                    <input type="time" class="form-control" id="lessonEnd" name="EndTime" required>
+                </div>
+
+                <button id="submitButton" type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+
+    @*Modal*@
+    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
